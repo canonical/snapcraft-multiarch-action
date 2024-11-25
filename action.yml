@@ -8,7 +8,7 @@ inputs:
   path:
     description: >
       The location of the Snapcraft project.
-      
+
       Defaults to the base of the repository
     default: '.'
     required: true
