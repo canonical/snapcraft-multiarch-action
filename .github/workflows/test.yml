@@ -21,6 +21,7 @@ jobs:
 
   docker-integration: # make sure the action works on a clean machine without building
     strategy:
+      fail-fast: false
       matrix:
         base:
           - core18
