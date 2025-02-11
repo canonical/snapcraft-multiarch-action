@@ -116,7 +116,7 @@ for (const [base, arch, channel] of matrix) {
     expect(execMock).toHaveBeenNthCalledWith(
       1,
       'docker',
-      ['pull', ...platform, `diddledani/snapcraft:${base}`],
+      ['pull', ...platform, `ghcr.io/hook25/snapcraft-container:${base}`],
       expect.anything()
     )
     expect(execMock).toHaveBeenNthCalledWith(
@@ -138,7 +138,7 @@ for (const [base, arch, channel] of matrix) {
         'SNAPCRAFT_BUILD_INFO=1',
         '--env',
         `USE_SNAPCRAFT_CHANNEL=${channel}`,
-        `diddledani/snapcraft:${base}`,
+        `ghcr.io/hook25/snapcraft-container:${base}`,
         'snapcraft'
       ],
       {
@@ -196,7 +196,7 @@ for (const [base, arch, channel] of matrix) {
     expect(execMock).toHaveBeenNthCalledWith(
       1,
       'sudo podman',
-      ['pull', ...platform, `docker.io/diddledani/snapcraft:${base}`],
+      ['pull', ...platform, `ghcr.io/hook25/snapcraft-container:${base}`],
       expect.anything()
     )
     expect(execMock).toHaveBeenNthCalledWith(
@@ -220,7 +220,7 @@ for (const [base, arch, channel] of matrix) {
         `USE_SNAPCRAFT_CHANNEL=${channel}`,
         '--systemd',
         'always',
-        `docker.io/diddledani/snapcraft:${base}`,
+        `ghcr.io/hook25/snapcraft-container:${base}`,
         'snapcraft'
       ],
       {
@@ -274,7 +274,7 @@ test('SnapcraftBuilder.build can disable build info', async () => {
       `SNAPCRAFT_IMAGE_INFO={"build_url":"https://github.com/user/repo/actions/runs/42"}`,
       '--env',
       'USE_SNAPCRAFT_CHANNEL=stable',
-      `diddledani/snapcraft:${default_base}`,
+      `ghcr.io/hook25/snapcraft-container:${default_base}`,
       'snapcraft'
     ],
     {
@@ -327,7 +327,7 @@ test('SnapcraftBuilder.build can pass additional arguments', async () => {
       `SNAPCRAFT_IMAGE_INFO={"build_url":"https://github.com/user/repo/actions/runs/42"}`,
       '--env',
       'USE_SNAPCRAFT_CHANNEL=stable',
-      `diddledani/snapcraft:${default_base}`,
+      `ghcr.io/hook25/snapcraft-container:${default_base}`,
       'snapcraft',
       '--foo',
       '--bar'
@@ -384,7 +384,7 @@ test('SnapcraftBuilder.build can pass extra environment variables', async () => 
       `SNAPCRAFT_IMAGE_INFO={"build_url":"https://github.com/user/repo/actions/runs/42"}`,
       '--env',
       'USE_SNAPCRAFT_CHANNEL=stable',
-      `diddledani/snapcraft:${default_base}`,
+      `ghcr.io/hook25/snapcraft-container:${default_base}`,
       'snapcraft',
       '--foo',
       '--bar'
@@ -439,7 +439,7 @@ test('SnapcraftBuilder.build adds store credentials', async () => {
       'USE_SNAPCRAFT_CHANNEL=stable',
       '--env',
       'SNAPCRAFT_STORE_CREDENTIALS=TEST_STORE_CREDENTIALS',
-      `diddledani/snapcraft:${default_base}`,
+      `ghcr.io/hook25/snapcraft-container:${default_base}`,
       'snapcraft',
       '--foo',
       '--bar'

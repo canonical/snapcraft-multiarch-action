@@ -8170,7 +8170,7 @@ class SnapcraftBuilder {
             dockerArgs = dockerArgs.concat('--env', `${key}=${env[key]}`);
         }
         let command = 'docker';
-        let containerImage = `diddledani/snapcraft:${base}`;
+        let containerImage = `ghcr.io/hook25/snapcraft-container:${base}`;
         if (this.usePodman) {
             command = 'sudo podman';
             containerImage = `docker.io/${containerImage}`;
