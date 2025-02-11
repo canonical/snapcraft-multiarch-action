@@ -29,6 +29,7 @@ jobs:
           - core22
           - core24
         arch:
+          - amd64
           - armhf
           - arm64
         runner:
@@ -39,6 +40,9 @@ jobs:
             runner: ubuntu-20.04
           - base: core
             arch: arm64
+            runner: ubuntu-20.04
+          - base: core
+            arch: amd64
             runner: ubuntu-20.04
     runs-on: ${{ matrix.runner }}
     steps:
