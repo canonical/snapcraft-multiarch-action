@@ -22,7 +22,6 @@ test('SnapcraftBuilder expands tilde in project root', () => {
     '',
     '',
     [],
-    false,
     ''
   )
   expect(builder.projectRoot).toBe(os.homedir())
@@ -34,7 +33,6 @@ test('SnapcraftBuilder expands tilde in project root', () => {
     '',
     '',
     [],
-    false,
     ''
   )
   expect(builder.projectRoot).toBe(path.join(os.homedir(), 'foo/bar'))
@@ -96,7 +94,6 @@ for (const [base, arch, channel] of matrix) {
       '',
       arch,
       [],
-      false,
       ''
     )
     await builder.build()
@@ -172,7 +169,6 @@ test('SnapcraftBuilder.build can disable build info', async () => {
     '',
     '',
     [],
-    false,
     ''
   )
   await builder.build()
@@ -225,7 +221,6 @@ test('SnapcraftBuilder.build can pass additional arguments', async () => {
     '--foo --bar',
     '',
     [],
-    false,
     ''
   )
   await builder.build()
@@ -278,7 +273,6 @@ test('SnapcraftBuilder.build can pass extra environment variables', async () => 
     '--foo --bar',
     '',
     ['FOO=bar', 'BAZ=qux'],
-    false,
     ''
   )
   await builder.build()
@@ -335,7 +329,6 @@ test('SnapcraftBuilder.build adds store credentials', async () => {
     '--foo --bar',
     '',
     [],
-    false,
     'TEST_STORE_CREDENTIALS'
   )
   await builder.build()
@@ -377,7 +370,6 @@ test('SnapcraftBuilder.outputSnap fails if there are no snaps', async () => {
     '',
     '',
     [],
-    false,
     ''
   )
 
@@ -404,7 +396,6 @@ test('SnapcraftBuilder.outputSnap returns the first snap', async () => {
     '',
     '',
     [],
-    false,
     ''
   )
 

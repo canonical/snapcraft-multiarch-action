@@ -8166,8 +8166,8 @@ class SnapcraftBuilder {
         for (const key in env) {
             dockerArgs = dockerArgs.concat('--env', `${key}=${env[key]}`);
         }
-        let command = 'docker';
-        let containerImage = `ghcr.io/hook25/snapcraft-container:${base}`;
+        const command = 'docker';
+        const containerImage = `ghcr.io/hook25/snapcraft-container:${base}`;
         await exec.exec(command, ['pull', ...pullArgs, containerImage], {
             cwd: this.projectRoot
         });
