@@ -8118,13 +8118,12 @@ const platforms = {
     s390x: 'linux/s390x'
 };
 class SnapcraftBuilder {
-    constructor(projectRoot, includeBuildInfo, snapcraftChannel, snapcraftArgs, architecture, environment, usePodman, storeAuth) {
+    constructor(projectRoot, includeBuildInfo, snapcraftChannel, snapcraftArgs, architecture, environment, storeAuth) {
         this.projectRoot = expandHome(projectRoot);
         this.includeBuildInfo = includeBuildInfo;
         this.snapcraftChannel = snapcraftChannel;
         this.snapcraftArgs = parseArgs(snapcraftArgs);
         this.architecture = architecture;
-        this.usePodman = usePodman;
         this.storeAuth = storeAuth;
         const envKV = {};
         for (const env of environment) {
@@ -8134,9 +8133,7 @@ class SnapcraftBuilder {
         this.environment = envKV;
     }
     async build() {
-        if (!this.usePodman) {
-            await ensureDockerExperimental();
-        }
+        await ensureDockerExperimental();
         const base = await detectBase(this.projectRoot);
         if (!['core', 'core18', 'core20', 'core22', 'core24'].includes(base)) {
             throw new Error(`Your build requires a base that this tool does not support (${base}). 'base' or 'build-base' in your 'snapcraft.yaml' must be one of 'core', 'core18', 'core20', 'core22' or 'core24'.`);
@@ -8171,11 +8168,6 @@ class SnapcraftBuilder {
         }
         let command = 'docker';
         let containerImage = `ghcr.io/hook25/snapcraft-container:${base}`;
-        if (this.usePodman) {
-            command = 'sudo podman';
-            containerImage = `docker.io/${containerImage}`;
-            dockerArgs = dockerArgs.concat('--systemd', 'always');
-        }
         await exec.exec(command, ['pull', ...pullArgs, containerImage], {
             cwd: this.projectRoot
         });
@@ -8228,7 +8220,6 @@ async function run() {
             throw new Error(`Only supported on linux platform`);
         }
         const path = core.getInput('path');
-        const usePodman = (core.getInput('use-podman') ?? 'true').toUpperCase() === 'TRUE';
         const buildInfo = (core.getInput('build-info') ?? 'true').toUpperCase() === 'TRUE';
         core.info(`Building Snapcraft project in "${path}"...`);
         const snapcraftChannel = core.getInput('snapcraft-channel');
@@ -8236,7 +8227,7 @@ async function run() {
         const architecture = core.getInput('architecture');
         const environment = core.getMultilineInput('environment');
         const store_auth = core.getInput('store-auth');
-        const builder = new SnapcraftBuilder(path, buildInfo, snapcraftChannel, snapcraftArgs, architecture, environment, usePodman, store_auth);
+        const builder = new SnapcraftBuilder(path, buildInfo, snapcraftChannel, snapcraftArgs, architecture, environment, store_auth);
         await builder.build();
         const snap = await builder.outputSnap();
         core.setOutput('snap', snap);
