@@ -46,8 +46,6 @@ jobs:
     runs-on: ${{ matrix.runner }}
     steps:
     - uses: docker/setup-qemu-action@v3
-      with:
-        image: 'tonistiigi/binfmt:master'
     - uses: actions/checkout@v4
     - name: Install crun
       uses: ./.github/actions/fix-crun
