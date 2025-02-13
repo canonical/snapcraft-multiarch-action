@@ -8,7 +8,7 @@ import * as exec from '@actions/exec'
 import * as build from '../src/build'
 import * as tools from '../src/tools'
 
-const default_base = 'core22'
+const default_base = 'core24'
 
 afterEach(() => {
   jest.restoreAllMocks()
@@ -22,7 +22,6 @@ test('SnapcraftBuilder expands tilde in project root', () => {
     '',
     '',
     [],
-    false,
     ''
   )
   expect(builder.projectRoot).toBe(os.homedir())
@@ -34,14 +33,13 @@ test('SnapcraftBuilder expands tilde in project root', () => {
     '',
     '',
     [],
-    false,
     ''
   )
   expect(builder.projectRoot).toBe(path.join(os.homedir(), 'foo/bar'))
 })
 
 let matrix: [string, string, string][] = []
-for (const base of ['core', 'core18', 'core20', 'core22']) {
+for (const base of ['core', 'core18', 'core20', 'core22', 'core24']) {
   for (const arch of [
     '',
     'amd64',
@@ -96,7 +94,6 @@ for (const [base, arch, channel] of matrix) {
       '',
       arch,
       [],
-      false,
       ''
     )
     await builder.build()
@@ -116,7 +113,7 @@ for (const [base, arch, channel] of matrix) {
     expect(execMock).toHaveBeenNthCalledWith(
       1,
       'docker',
-      ['pull', ...platform, `diddledani/snapcraft:${base}`],
+      ['pull', ...platform, `ghcr.io/hook25/snapcraft-container:${base}`],
       expect.anything()
     )
     expect(execMock).toHaveBeenNthCalledWith(
@@ -138,89 +135,7 @@ for (const [base, arch, channel] of matrix) {
         'SNAPCRAFT_BUILD_INFO=1',
         '--env',
         `USE_SNAPCRAFT_CHANNEL=${channel}`,
-        `diddledani/snapcraft:${base}`,
-        'snapcraft'
-      ],
-      {
-        cwd: `${process.cwd()}/${projectDir}`
-      }
-    )
-  })
-
-  test(`SnapcraftBuilder.build runs a snap build using Podman with base: ${base}; and arch: ${arch}`, async () => {
-    expect.assertions(5)
-    const ensureDockerExperimentalMock = jest
-      .spyOn(tools, 'ensureDockerExperimental')
-      .mockImplementation(async (): Promise<void> => Promise.resolve())
-    const detectBaseMock = jest
-      .spyOn(tools, 'detectBase')
-      .mockImplementation(
-        async (projectRoot: string): Promise<string> => Promise.resolve(base)
-      )
-    const detectCGroupsV1Mock = jest
-      .spyOn(tools, 'detectCGroupsV1')
-      .mockImplementation(async (): Promise<boolean> => Promise.resolve(true))
-    const execMock = jest
-      .spyOn(exec, 'exec')
-      .mockImplementation(
-        async (program: string, args?: string[]): Promise<number> => 0
-      )
-    process.env['GITHUB_REPOSITORY'] = 'user/repo'
-    process.env['GITHUB_RUN_ID'] = '42'
-
-    const projectDir = 'project-root'
-    const builder = new build.SnapcraftBuilder(
-      projectDir,
-      true,
-      'stable',
-      '',
-      arch,
-      [],
-      true,
-      ''
-    )
-    await builder.build()
-
-    let platform: string[] = []
-    if (arch && arch in build.platforms) {
-      platform = ['--platform', build.platforms[arch]]
-    }
-
-    expect(ensureDockerExperimentalMock).not.toHaveBeenCalled()
-    expect(detectBaseMock).toHaveBeenCalled()
-    if (base === 'core') {
-      expect(detectCGroupsV1Mock).toHaveBeenCalled()
-    } else {
-      expect(detectCGroupsV1Mock).not.toHaveBeenCalled()
-    }
-    expect(execMock).toHaveBeenNthCalledWith(
-      1,
-      'sudo podman',
-      ['pull', ...platform, `docker.io/diddledani/snapcraft:${base}`],
-      expect.anything()
-    )
-    expect(execMock).toHaveBeenNthCalledWith(
-      2,
-      'sudo podman',
-      [
-        'run',
-        '--rm',
-        '--tty',
-        '--privileged',
-        '--volume',
-        `${process.cwd()}/${projectDir}:/data`,
-        '--workdir',
-        '/data',
-        ...platform,
-        '--env',
-        `SNAPCRAFT_IMAGE_INFO={"build_url":"https://github.com/user/repo/actions/runs/42"}`,
-        '--env',
-        'SNAPCRAFT_BUILD_INFO=1',
-        '--env',
-        `USE_SNAPCRAFT_CHANNEL=${channel}`,
-        '--systemd',
-        'always',
-        `docker.io/diddledani/snapcraft:${base}`,
+        `ghcr.io/hook25/snapcraft-container:${base}`,
         'snapcraft'
       ],
       {
@@ -254,7 +169,6 @@ test('SnapcraftBuilder.build can disable build info', async () => {
     '',
     '',
     [],
-    false,
     ''
   )
   await builder.build()
@@ -274,7 +188,7 @@ test('SnapcraftBuilder.build can disable build info', async () => {
       `SNAPCRAFT_IMAGE_INFO={"build_url":"https://github.com/user/repo/actions/runs/42"}`,
       '--env',
       'USE_SNAPCRAFT_CHANNEL=stable',
-      `diddledani/snapcraft:${default_base}`,
+      `ghcr.io/hook25/snapcraft-container:${default_base}`,
       'snapcraft'
     ],
     {
@@ -307,7 +221,6 @@ test('SnapcraftBuilder.build can pass additional arguments', async () => {
     '--foo --bar',
     '',
     [],
-    false,
     ''
   )
   await builder.build()
@@ -327,7 +240,7 @@ test('SnapcraftBuilder.build can pass additional arguments', async () => {
       `SNAPCRAFT_IMAGE_INFO={"build_url":"https://github.com/user/repo/actions/runs/42"}`,
       '--env',
       'USE_SNAPCRAFT_CHANNEL=stable',
-      `diddledani/snapcraft:${default_base}`,
+      `ghcr.io/hook25/snapcraft-container:${default_base}`,
       'snapcraft',
       '--foo',
       '--bar'
@@ -360,7 +273,6 @@ test('SnapcraftBuilder.build can pass extra environment variables', async () => 
     '--foo --bar',
     '',
     ['FOO=bar', 'BAZ=qux'],
-    false,
     ''
   )
   await builder.build()
@@ -384,7 +296,7 @@ test('SnapcraftBuilder.build can pass extra environment variables', async () => 
       `SNAPCRAFT_IMAGE_INFO={"build_url":"https://github.com/user/repo/actions/runs/42"}`,
       '--env',
       'USE_SNAPCRAFT_CHANNEL=stable',
-      `diddledani/snapcraft:${default_base}`,
+      `ghcr.io/hook25/snapcraft-container:${default_base}`,
       'snapcraft',
       '--foo',
       '--bar'
@@ -417,7 +329,6 @@ test('SnapcraftBuilder.build adds store credentials', async () => {
     '--foo --bar',
     '',
     [],
-    false,
     'TEST_STORE_CREDENTIALS'
   )
   await builder.build()
@@ -439,7 +350,7 @@ test('SnapcraftBuilder.build adds store credentials', async () => {
       'USE_SNAPCRAFT_CHANNEL=stable',
       '--env',
       'SNAPCRAFT_STORE_CREDENTIALS=TEST_STORE_CREDENTIALS',
-      `diddledani/snapcraft:${default_base}`,
+      `ghcr.io/hook25/snapcraft-container:${default_base}`,
       'snapcraft',
       '--foo',
       '--bar'
@@ -459,7 +370,6 @@ test('SnapcraftBuilder.outputSnap fails if there are no snaps', async () => {
     '',
     '',
     [],
-    false,
     ''
   )
 
@@ -486,7 +396,6 @@ test('SnapcraftBuilder.outputSnap returns the first snap', async () => {
     '',
     '',
     [],
-    false,
     ''
   )
 

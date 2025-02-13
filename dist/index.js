@@ -556,8 +556,8 @@ class OidcClient {
             const res = yield httpclient
                 .getJson(id_token_url)
                 .catch(error => {
-                throw new Error(`Failed to get ID Token. \n 
-        Error Code : ${error.statusCode}\n 
+                throw new Error(`Failed to get ID Token. \n
+        Error Code : ${error.statusCode}\n
         Error Message: ${error.result.message}`);
             });
             const id_token = (_a = res.result) === null || _a === void 0 ? void 0 : _a.value;
@@ -4038,7 +4038,7 @@ module.exports = require("util");
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __nccwpck_require__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -4052,7 +4052,7 @@ module.exports = require("util");
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/ 	
+/******/
 /******/ 		// Execute the module function
 /******/ 		var threw = true;
 /******/ 		try {
@@ -4061,11 +4061,11 @@ module.exports = require("util");
 /******/ 		} finally {
 /******/ 			if(threw) delete __webpack_module_cache__[moduleId];
 /******/ 		}
-/******/ 	
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
+/******/
 /************************************************************************/
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
@@ -4077,11 +4077,11 @@ module.exports = require("util");
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/compat */
-/******/ 	
+/******/
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
-/******/ 	
+/******/
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
@@ -8067,6 +8067,7 @@ function parseArgs(argumentsString) {
 ;// CONCATENATED MODULE: ./lib/channel-matrix.js
 function getChannel(base, channel) {
     switch (base) {
+        case 'core24':
         case 'core22':
         case 'core20':
             return channel;
@@ -8117,13 +8118,12 @@ const platforms = {
     s390x: 'linux/s390x'
 };
 class SnapcraftBuilder {
-    constructor(projectRoot, includeBuildInfo, snapcraftChannel, snapcraftArgs, architecture, environment, usePodman, storeAuth) {
+    constructor(projectRoot, includeBuildInfo, snapcraftChannel, snapcraftArgs, architecture, environment, storeAuth) {
         this.projectRoot = expandHome(projectRoot);
         this.includeBuildInfo = includeBuildInfo;
         this.snapcraftChannel = snapcraftChannel;
         this.snapcraftArgs = parseArgs(snapcraftArgs);
         this.architecture = architecture;
-        this.usePodman = usePodman;
         this.storeAuth = storeAuth;
         const envKV = {};
         for (const env of environment) {
@@ -8133,12 +8133,10 @@ class SnapcraftBuilder {
         this.environment = envKV;
     }
     async build() {
-        if (!this.usePodman) {
-            await ensureDockerExperimental();
-        }
+        await ensureDockerExperimental();
         const base = await detectBase(this.projectRoot);
-        if (!['core', 'core18', 'core20', 'core22'].includes(base)) {
-            throw new Error(`Your build requires a base that this tool does not support (${base}). 'base' or 'build-base' in your 'snapcraft.yaml' must be one of 'core', 'core18' or 'core20'.`);
+        if (!['core', 'core18', 'core20', 'core22', 'core24'].includes(base)) {
+            throw new Error(`Your build requires a base that this tool does not support (${base}). 'base' or 'build-base' in your 'snapcraft.yaml' must be one of 'core', 'core18', 'core20', 'core22' or 'core24'.`);
         }
         if (base === 'core' && !(await detectCGroupsV1())) {
             throw new Error(`Your build specified 'core' as the base, but your system is using cgroups v2. 'core' does not support cgroups v2. Please use 'core18' or later or an older Linux distribution that uses CGroups version 1 instead.`);
@@ -8168,13 +8166,8 @@ class SnapcraftBuilder {
         for (const key in env) {
             dockerArgs = dockerArgs.concat('--env', `${key}=${env[key]}`);
         }
-        let command = 'docker';
-        let containerImage = `diddledani/snapcraft:${base}`;
-        if (this.usePodman) {
-            command = 'sudo podman';
-            containerImage = `docker.io/${containerImage}`;
-            dockerArgs = dockerArgs.concat('--systemd', 'always');
-        }
+        const command = 'docker';
+        const containerImage = `ghcr.io/hook25/snapcraft-container:${base}`;
         await exec.exec(command, ['pull', ...pullArgs, containerImage], {
             cwd: this.projectRoot
         });
@@ -8227,7 +8220,6 @@ async function run() {
             throw new Error(`Only supported on linux platform`);
         }
         const path = core.getInput('path');
-        const usePodman = (core.getInput('use-podman') ?? 'true').toUpperCase() === 'TRUE';
         const buildInfo = (core.getInput('build-info') ?? 'true').toUpperCase() === 'TRUE';
         core.info(`Building Snapcraft project in "${path}"...`);
         const snapcraftChannel = core.getInput('snapcraft-channel');
@@ -8235,7 +8227,7 @@ async function run() {
         const architecture = core.getInput('architecture');
         const environment = core.getMultilineInput('environment');
         const store_auth = core.getInput('store-auth');
-        const builder = new SnapcraftBuilder(path, buildInfo, snapcraftChannel, snapcraftArgs, architecture, environment, usePodman, store_auth);
+        const builder = new SnapcraftBuilder(path, buildInfo, snapcraftChannel, snapcraftArgs, architecture, environment, store_auth);
         await builder.build();
         const snap = await builder.outputSnap();
         core.setOutput('snap', snap);

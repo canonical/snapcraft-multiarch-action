@@ -42,7 +42,6 @@ export class SnapcraftBuilder {
   snapcraftArgs: string[]
   architecture: string
   environment: {[key: string]: string}
-  usePodman: boolean
   storeAuth: string
 
   constructor(
@@ -52,7 +51,6 @@ export class SnapcraftBuilder {
     snapcraftArgs: string,
     architecture: string,
     environment: string[],
-    usePodman: boolean,
     storeAuth: string
   ) {
     this.projectRoot = expandHome(projectRoot)
@@ -60,7 +58,6 @@ export class SnapcraftBuilder {
     this.snapcraftChannel = snapcraftChannel
     this.snapcraftArgs = parseArgs(snapcraftArgs)
     this.architecture = architecture
-    this.usePodman = usePodman
     this.storeAuth = storeAuth
 
     const envKV: {[key: string]: string} = {}
@@ -72,14 +69,12 @@ export class SnapcraftBuilder {
   }
 
   async build(): Promise<void> {
-    if (!this.usePodman) {
-      await tools.ensureDockerExperimental()
-    }
+    await tools.ensureDockerExperimental()
     const base = await tools.detectBase(this.projectRoot)
 
-    if (!['core', 'core18', 'core20', 'core22'].includes(base)) {
+    if (!['core', 'core18', 'core20', 'core22', 'core24'].includes(base)) {
       throw new Error(
-        `Your build requires a base that this tool does not support (${base}). 'base' or 'build-base' in your 'snapcraft.yaml' must be one of 'core', 'core18' or 'core20'.`
+        `Your build requires a base that this tool does not support (${base}). 'base' or 'build-base' in your 'snapcraft.yaml' must be one of 'core', 'core18', 'core20', 'core22' or 'core24'.`
       )
     }
 
@@ -117,13 +112,8 @@ export class SnapcraftBuilder {
       dockerArgs = dockerArgs.concat('--env', `${key}=${env[key]}`)
     }
 
-    let command = 'docker'
-    let containerImage = `diddledani/snapcraft:${base}`
-    if (this.usePodman) {
-      command = 'sudo podman'
-      containerImage = `docker.io/${containerImage}`
-      dockerArgs = dockerArgs.concat('--systemd', 'always')
-    }
+    const command = 'docker'
+    const containerImage = `ghcr.io/hook25/snapcraft-container:${base}`
 
     await exec.exec(command, ['pull', ...pullArgs, containerImage], {
       cwd: this.projectRoot
