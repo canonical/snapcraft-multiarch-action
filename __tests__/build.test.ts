@@ -113,7 +113,7 @@ for (const [base, arch, channel] of matrix) {
     expect(execMock).toHaveBeenNthCalledWith(
       1,
       'docker',
-      ['pull', ...platform, `ghcr.io/hook25/snapcraft-container:${base}`],
+      ['pull', ...platform, `ghcr.io/canonical/snapcraft-container:${base}`],
       expect.anything()
     )
     expect(execMock).toHaveBeenNthCalledWith(
@@ -135,7 +135,7 @@ for (const [base, arch, channel] of matrix) {
         'SNAPCRAFT_BUILD_INFO=1',
         '--env',
         `USE_SNAPCRAFT_CHANNEL=${channel}`,
-        `ghcr.io/hook25/snapcraft-container:${base}`,
+        `ghcr.io/canonical/snapcraft-container:${base}`,
         'snapcraft'
       ],
       {
@@ -188,7 +188,7 @@ test('SnapcraftBuilder.build can disable build info', async () => {
       `SNAPCRAFT_IMAGE_INFO={"build_url":"https://github.com/user/repo/actions/runs/42"}`,
       '--env',
       'USE_SNAPCRAFT_CHANNEL=stable',
-      `ghcr.io/hook25/snapcraft-container:${default_base}`,
+      `ghcr.io/canonical/snapcraft-container:${default_base}`,
       'snapcraft'
     ],
     {
@@ -240,7 +240,7 @@ test('SnapcraftBuilder.build can pass additional arguments', async () => {
       `SNAPCRAFT_IMAGE_INFO={"build_url":"https://github.com/user/repo/actions/runs/42"}`,
       '--env',
       'USE_SNAPCRAFT_CHANNEL=stable',
-      `ghcr.io/hook25/snapcraft-container:${default_base}`,
+      `ghcr.io/canonical/snapcraft-container:${default_base}`,
       'snapcraft',
       '--foo',
       '--bar'
@@ -296,7 +296,7 @@ test('SnapcraftBuilder.build can pass extra environment variables', async () => 
       `SNAPCRAFT_IMAGE_INFO={"build_url":"https://github.com/user/repo/actions/runs/42"}`,
       '--env',
       'USE_SNAPCRAFT_CHANNEL=stable',
-      `ghcr.io/hook25/snapcraft-container:${default_base}`,
+      `ghcr.io/canonical/snapcraft-container:${default_base}`,
       'snapcraft',
       '--foo',
       '--bar'
@@ -350,7 +350,7 @@ test('SnapcraftBuilder.build adds store credentials', async () => {
       'USE_SNAPCRAFT_CHANNEL=stable',
       '--env',
       'SNAPCRAFT_STORE_CREDENTIALS=TEST_STORE_CREDENTIALS',
-      `ghcr.io/hook25/snapcraft-container:${default_base}`,
+      `ghcr.io/canonical/snapcraft-container:${default_base}`,
       'snapcraft',
       '--foo',
       '--bar'

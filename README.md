@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/Hook25/snapcraft-multiarch-action/actions"><img alt="snapcraft-multiarch-build-action status" src="https://github.com/Hook25/snapcraft-multiarch-action/workflows/build-test/badge.svg"></a>
+  <a href="https://github.com/canonical/snapcraft-multiarch-action/actions"><img alt="snapcraft-multiarch-build-action status" src="https://github.com/canonical/snapcraft-multiarch-action/workflows/build-test/badge.svg"></a>
 </p>
 
 # Snapcraft Multiarch Build Action
@@ -14,10 +14,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: Hook25/snapcraft-multiarch-action@v1
+    - uses: canonical/snapcraft-multiarch-action@v1
 ```
 
-This will run `snapcraft` using the [snapcraft-container](ghcr.io/hook25/snapcraft-container:core24)
+This will run `snapcraft` using the [snapcraft-container](ghcr.io/canonical/snapcraft-container:core24)
 
 On success, the action will set the `snap` output parameter to the
 path of the built snap.  This can be used to save it as an artifact of
@@ -25,7 +25,7 @@ the workflow:
 
 ```yaml
 ...
-    - uses: Hook25/snapcraft-multiarch-action@v1
+    - uses: canonical/snapcraft-multiarch-action@v1
       id: snapcraft
     - uses: actions/upload-artifact@v4
       with:
@@ -68,7 +68,7 @@ jobs:
         # see https://github.com/tonistiigi/binfmt/issues/215
         # also see: https://bugs.launchpad.net/ubuntu/+source/qemu/+bug/2096782
         image: 'tonistiigi/binfmt:master'
-    - uses: Hook25/snapcraft-multiarch-action@v1
+    - uses: canonical/snapcraft-multiarch-action@v1
       with:
         architecture: ${{ matrix.platform }}
 ```
@@ -83,7 +83,7 @@ parameter:
 
 ```yaml
 ...
-    - uses: Hook25/snapcraft-multiarch-action@v1
+    - uses: canonical/snapcraft-multiarch-action@v1
       with:
         path: path-to-snapcraft-project
 ```
