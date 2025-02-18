@@ -113,7 +113,7 @@ export class SnapcraftBuilder {
     }
 
     const command = 'docker'
-    const containerImage = `ghcr.io/hook25/snapcraft-container:${base}`
+    const containerImage = `ghcr.io/canonical/snapcraft-container:${base}`
 
     await exec.exec(command, ['pull', ...pullArgs, containerImage], {
       cwd: this.projectRoot
