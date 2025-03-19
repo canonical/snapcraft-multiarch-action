@@ -43,6 +43,12 @@ jobs:
           - base: core
             arch: amd64
             runner: ubuntu-20.04
+          - base: core24
+            arch: riscv64
+            runner: ubuntu-latest
+          - base: core24
+            arch: riscv64
+            runner: ubuntu-latest
     runs-on: ${{ matrix.runner }}
     steps:
     - uses: docker/setup-qemu-action@v3
