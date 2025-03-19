@@ -61,6 +61,7 @@ jobs:
         - amd64
         - armhf
         - arm64
+        - riscv64 # Note: only core24 and core22 support riscv64
     steps:
     - uses: actions/checkout@v4
     - uses: docker/setup-qemu-action@v3
@@ -119,7 +120,8 @@ arguments to Snapcraft.
 By default, the action will build for AMD64. You may use this parameter
 to indicate an alternative architecture from any of those supported by
 the `snapcraft` utility. At the time of writing the supported
-architectures are `amd64`, `arm64`, `armhf`.
+architectures are `amd64`, `arm64`, `armhf`and `riscv64` (only on `core22`
+and `core24`).
 This is most-useful when used with GitHub Actions' `matrix` feature.
 
 ### `environment`
