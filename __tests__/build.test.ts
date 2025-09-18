@@ -15,15 +15,7 @@ afterEach(() => {
 })
 
 test('SnapcraftBuilder expands tilde in project root', () => {
-  let builder = new build.SnapcraftBuilder(
-    '~',
-    true,
-    'stable',
-    '',
-    '',
-    [],
-    ''
-  )
+  let builder = new build.SnapcraftBuilder('~', true, 'stable', '', '', [], '')
   expect(builder.projectRoot).toBe(os.homedir())
 
   builder = new build.SnapcraftBuilder(
