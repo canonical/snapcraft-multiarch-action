@@ -8115,7 +8115,8 @@ const platforms = {
     armhf: 'linux/arm/v7',
     arm64: 'linux/arm64',
     ppc64el: 'linux/ppc64le',
-    s390x: 'linux/s390x'
+    s390x: 'linux/s390x',
+    riscv64: 'linux/riscv64'
 };
 class SnapcraftBuilder {
     constructor(projectRoot, includeBuildInfo, snapcraftChannel, snapcraftArgs, architecture, environment, storeAuth) {
@@ -8162,6 +8163,10 @@ class SnapcraftBuilder {
         if (this.architecture in platforms) {
             dockerArgs = dockerArgs.concat('--platform', platforms[this.architecture]);
             pullArgs = pullArgs.concat('--platform', platforms[this.architecture]);
+        }else{
+          throw new Error(
+            'Architecture is wrong or unsupported by this action'
+          )
         }
         for (const key in env) {
             dockerArgs = dockerArgs.concat('--env', `${key}=${env[key]}`);
