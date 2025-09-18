@@ -107,10 +107,8 @@ export class SnapcraftBuilder {
     if (this.architecture in platforms) {
       dockerArgs = dockerArgs.concat('--platform', platforms[this.architecture])
       pullArgs = pullArgs.concat('--platform', platforms[this.architecture])
-    }else{
-      throw new Error(
-        'Architecture is wrong or unsupported by this action'
-      )
+    } else if (this.architecture) {
+      throw new Error('Architecture is wrong or unsupported by this action')
     }
 
     for (const key in env) {
