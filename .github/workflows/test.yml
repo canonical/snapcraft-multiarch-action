@@ -36,14 +36,14 @@ jobs:
         include:
           - base: core
             arch: armhf
-            runner: ubuntu-20.04
+            runner: ["self-hosted", "focal"]
           - base: core
             arch: arm64
-            runner: ubuntu-20.04
+            runner: ["self-hosted", "focal"]
           - base: core
             arch: amd64
-            runner: ubuntu-20.04
-          - base: core24
+            runner: ["self-hosted", "focal"]
+          - base: core22
             arch: riscv64
             runner: ubuntu-latest
           - base: core24
