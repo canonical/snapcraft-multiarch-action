@@ -1,9 +1,16 @@
 export function getChannel(base: string, channel: string): string {
   switch (base) {
+    case 'core26':
     case 'core24':
     case 'core22':
-    case 'core20':
       return channel
+    case 'core20':
+      if (channel.startsWith('8.x/')) {
+        return channel
+      }
+      if (['stable', 'candidate', 'beta', 'edge'].includes(channel)) {
+        return `8.x/${channel}`
+      }
     case 'core18':
       if (channel.startsWith('5.x/')) {
         return channel
