@@ -7,6 +7,7 @@ function preferredChannel(base_channele: string, channel: string): string {
 
 export function getChannel(base: string, channel: string): string {
   switch (base) {
+    case 'core26':
     case 'core24':
       return preferredChannel('9.x', channel)
     case 'core22':
