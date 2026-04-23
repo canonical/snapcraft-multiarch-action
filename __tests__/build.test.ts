@@ -8,7 +8,7 @@ import * as exec from '@actions/exec'
 import * as build from '../src/build'
 import * as tools from '../src/tools'
 
-const default_base = 'core24'
+const default_base = 'core26'
 
 afterEach(() => {
   jest.restoreAllMocks()
@@ -31,7 +31,7 @@ test('SnapcraftBuilder expands tilde in project root', () => {
 })
 
 let matrix: [string, string, string][] = []
-for (const base of ['core', 'core18', 'core20', 'core22', 'core24']) {
+for (const base of ['core', 'core18', 'core20', 'core22', 'core24', 'core26']) {
   for (const arch of [
     '',
     'amd64',
@@ -48,6 +48,9 @@ for (const base of ['core', 'core18', 'core20', 'core22', 'core24']) {
         break
       case 'core18':
         channel = '5.x/stable'
+        break
+      case 'core20':
+        channel = '8.x/stable'
         break
       default:
         channel = 'stable'
