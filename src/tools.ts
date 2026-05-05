@@ -61,9 +61,6 @@ export async function detectBase(projectRoot: string): Promise<string> {
   if (snapcraftYaml === undefined) {
     throw new Error('Cannot parse snapcraft.yaml')
   }
-  if (snapcraftYaml['build-base']) {
-    return snapcraftYaml['build-base']
-  }
   if (snapcraftYaml.base) {
     return snapcraftYaml.base
   }
