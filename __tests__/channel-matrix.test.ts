@@ -21,10 +21,10 @@ for (const [base, channel, expected] of [
   ['core18', '5.x/candidate', '5.x/candidate'],
   ['core18', '5.x/beta', '5.x/beta'],
   ['core18', '5.x/edge', '5.x/edge'],
-  ['core20', 'stable', 'stable'],
-  ['core20', 'candidate', 'candidate'],
-  ['core20', 'beta', 'beta'],
-  ['core20', 'edge', 'edge'],
+  ['core20', 'stable', '8.x/stable'],
+  ['core20', 'candidate', '8.x/candidate'],
+  ['core20', 'beta', '8.x/beta'],
+  ['core20', 'edge', '8.x/edge'],
   ['core20', '4.x/stable', '4.x/stable'],
   ['core20', '4.x/candidate', '4.x/candidate'],
   ['core20', '4.x/beta', '4.x/beta'],
@@ -40,14 +40,14 @@ for (const [base, channel, expected] of [
   })
 }
 
-for (const [base, channel] of [
-  ['core', '5.x/stable'],
-  ['core', '5.x/candidate'],
-  ['core', '5.x/beta'],
-  ['core', '5.x/edge']
+for (const [base, channel, expected] of [
+  ['core', '5.x/stable', '5.x/stable'],
+  ['core', '5.x/candidate', '5.x/candidate'],
+  ['core', '5.x/beta', '5.x/beta'],
+  ['core', '5.x/edge', '5.x/edge']
 ]) {
-  test(`getChannel for '${base}' and '${channel}' throws an error`, () => {
+  test(`getChannel for '${base}' and '${channel}' returns '${expected}'`, () => {
     expect.assertions(1)
-    expect(() => getChannel(base, channel)).toThrow()
+    expect(getChannel(base, channel)).toEqual(expected)
   })
 }

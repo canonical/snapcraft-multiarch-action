@@ -49,8 +49,11 @@ for (const base of ['core', 'core18', 'core20', 'core22', 'core24']) {
       case 'core18':
         channel = '5.x/stable'
         break
+      case 'core20':
+        channel = '8.x/stable'
+        break
       default:
-        channel = 'stable'
+        channel = '9.x/stable'
     }
     matrix.push([base, arch, channel])
   }
@@ -179,7 +182,7 @@ test('SnapcraftBuilder.build can disable build info', async () => {
       '--env',
       `SNAPCRAFT_IMAGE_INFO={"build_url":"https://github.com/user/repo/actions/runs/42"}`,
       '--env',
-      'USE_SNAPCRAFT_CHANNEL=stable',
+      'USE_SNAPCRAFT_CHANNEL=9.x/stable',
       `ghcr.io/canonical/snapcraft-container:${default_base}`,
       'snapcraft'
     ],
@@ -231,7 +234,7 @@ test('SnapcraftBuilder.build can pass additional arguments', async () => {
       '--env',
       `SNAPCRAFT_IMAGE_INFO={"build_url":"https://github.com/user/repo/actions/runs/42"}`,
       '--env',
-      'USE_SNAPCRAFT_CHANNEL=stable',
+      'USE_SNAPCRAFT_CHANNEL=9.x/stable',
       `ghcr.io/canonical/snapcraft-container:${default_base}`,
       'snapcraft',
       '--foo',
@@ -287,7 +290,7 @@ test('SnapcraftBuilder.build can pass extra environment variables', async () => 
       '--env',
       `SNAPCRAFT_IMAGE_INFO={"build_url":"https://github.com/user/repo/actions/runs/42"}`,
       '--env',
-      'USE_SNAPCRAFT_CHANNEL=stable',
+      'USE_SNAPCRAFT_CHANNEL=9.x/stable',
       `ghcr.io/canonical/snapcraft-container:${default_base}`,
       'snapcraft',
       '--foo',
@@ -339,7 +342,7 @@ test('SnapcraftBuilder.build adds store credentials', async () => {
       '--env',
       `SNAPCRAFT_IMAGE_INFO={"build_url":"https://github.com/user/repo/actions/runs/42"}`,
       '--env',
-      'USE_SNAPCRAFT_CHANNEL=stable',
+      'USE_SNAPCRAFT_CHANNEL=9.x/stable',
       '--env',
       'SNAPCRAFT_STORE_CREDENTIALS=TEST_STORE_CREDENTIALS',
       `ghcr.io/canonical/snapcraft-container:${default_base}`,
