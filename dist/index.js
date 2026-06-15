@@ -8065,28 +8065,26 @@ function parseArgs(argumentsString) {
 }
 
 ;// CONCATENATED MODULE: ./lib/channel-matrix.js
+function preferredChannel(base_channele, channel) {
+    if (['stable', 'candidate', 'beta', 'edge'].includes(channel)) {
+        return `${base_channele}/${channel}`;
+    }
+    return channel;
+}
 function getChannel(base, channel) {
     switch (base) {
         case 'core24':
+            return preferredChannel('9.x', channel);
         case 'core22':
+            return preferredChannel('9.x', channel);
         case 'core20':
-            return channel;
+            return preferredChannel('8.x', channel);
         case 'core18':
-            if (channel.startsWith('5.x/')) {
-                return channel;
-            }
-            if (['stable', 'candidate', 'beta', 'edge'].includes(channel)) {
-                return `5.x/${channel}`;
-            }
+            return preferredChannel('5.x', channel);
         case 'core':
-            if (channel.startsWith('4.x/')) {
-                return channel;
-            }
-            if (['stable', 'candidate', 'beta', 'edge'].includes(channel)) {
-                return `4.x/${channel}`;
-            }
+            return preferredChannel('4.x', channel);
     }
-    throw new Error(`Snapcraft Channel '${channel}' is unsupported for builds targetting the '${base}' Base Snap.`);
+    return channel;
 }
 
 ;// CONCATENATED MODULE: ./lib/build.js
