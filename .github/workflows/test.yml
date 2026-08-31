@@ -27,6 +27,7 @@ jobs:
           - core20
           - core22
           - core24
+          - core26
         arch:
           - amd64
           - armhf
@@ -44,6 +45,9 @@ jobs:
             arch: amd64
             runner: ["self-hosted", "focal"]
           - base: core22
+            arch: riscv64
+            runner: ubuntu-latest
+          - base: core24
             arch: riscv64
             runner: ubuntu-latest
           - base: core24
